@@ -1,1 +1,1 @@
-web: bin/lets-go-chat
+web: bin/lets-go-chat/cmd
