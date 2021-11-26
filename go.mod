@@ -1,5 +1,6 @@
-module lets-go-chat
+module github.com/heroku/immense-woodland-75852
 
+// +heroku goVersion go1.17
 go 1.17
 
 require (
