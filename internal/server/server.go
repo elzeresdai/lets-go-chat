@@ -25,5 +25,11 @@ func New() *echo.Echo {
 }
 
 func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "hello world")
+	return c.String(http.StatusOK, "hello world \n"+
+		"For creating user, please send POST request to \"/users\" \n"+
+		"For log in you you should send POST request to \"/login\" \n"+
+		"it should looks like {"+
+		"name: SomeName\n"+
+		"password: SomePassword\n"+
+		"}")
 }

@@ -1,1 +1,0 @@
-this is test application for Golang course 
