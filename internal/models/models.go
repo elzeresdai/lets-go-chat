@@ -1,9 +1,31 @@
 package models
 
-var UserCollection []User
+import (
+	"github.com/google/uuid"
+)
 
-type User struct {
-	Name         string `json:"name"`
-	Password     string `json:"password"`
-	PasswordHash string `json:"-"`
+// swagger:model UserRequest
+type UserRequest struct {
+	UserName string `json:"name" validate:"required,min=4"`
+	Password string `json:"password" validate:"required,min=8"`
+}
+
+// swagger:model CreateUser
+type CreateUser struct {
+	UserName string
+	Hashed   string
+}
+
+// swagger:model CreateUserResponse
+type CreateUserResponse struct {
+	Id       uuid.UUID
+	UserName string
+}
+
+// swagger:model LoginUserResponse
+type LoginUserResponse struct {
+	Token string
+}
+type ValidationResponse struct {
+	Message string
 }
