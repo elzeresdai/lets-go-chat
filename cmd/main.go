@@ -8,17 +8,23 @@ import (
 	handler "lets-go-chat/internal/handlers"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8090"
+	}
+
 	di := container.Inject()
 	handlers := handler.InitHandlers(di)
 	e := echo.New()
 	e.POST("/user", handlers.User.HandleUserCreate)
 	e.POST("user/login", handlers.User.HandleUserLogin, IPRateLimit())
-	e.Logger.Fatal(e.Start(":8090"))
+	e.Logger.Fatal(e.Start(":" + port))
 	return
 }
 
