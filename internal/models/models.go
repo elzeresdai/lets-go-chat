@@ -4,16 +4,16 @@ import (
 	"github.com/google/uuid"
 )
 
-// swagger:model UserRequest
-type UserRequest struct {
-	UserName string `json:"name" validate:"required,min=4"`
+// swagger:model CreateUserRequest
+type CreateUserRequest struct {
+	UserName string `json:"userName" validate:"required,min=4"`
 	Password string `json:"password" validate:"required,min=8"`
 }
 
-// swagger:model CreateUser
-type CreateUser struct {
-	UserName string
-	Hashed   string
+// swagger:model LoginUserRequest
+type LoginUserRequest struct {
+	UserName string `json:"userName" validate:"required,min=4"`
+	Password string `json:"password" validate:"required,min=8"`
 }
 
 // swagger:model CreateUserResponse
@@ -24,7 +24,7 @@ type CreateUserResponse struct {
 
 // swagger:model LoginUserResponse
 type LoginUserResponse struct {
-	Token string
+	Url string
 }
 type ValidationResponse struct {
 	Message string
