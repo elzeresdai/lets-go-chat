@@ -19,6 +19,7 @@ func IsValidRequest(user models.CreateUserRequest) bool {
 	if err == nil {
 		return true
 	}
+	ValidationErrs = []models.ValidationResponse{}
 	for _, er := range err.(validator.ValidationErrors) {
 		errors := models.ValidationResponse{
 			Message: er.Error(),
