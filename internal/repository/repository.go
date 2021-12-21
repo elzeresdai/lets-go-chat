@@ -6,6 +6,6 @@ import (
 )
 
 type UserRepository interface {
-	LoginUser(user models.UserRequest) (*modelRepo.User, error)
-	CreateUser(user models.CreateUser) (modelRepo.User, error)
+	LoginUser(user models.LoginUserRequest) (*modelRepo.User, error)
+	CreateUser(user models.CreateUserRequest) (*modelRepo.User, error)
 }

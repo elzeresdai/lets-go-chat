@@ -20,20 +20,26 @@ func NewUserStoreInMemory() repository.UserRepository {
 	}
 }
 
-func (repo *userStoreInMemory) CreateUser(user models.CreateUser) (modelsRepo.User, error) {
+func (repo *userStoreInMemory) CreateUser(user models.CreateUserRequest) (*modelsRepo.User, error) {
 	repo.s.Lock()
 	defer repo.s.Unlock()
+
+	hash, err := hasher.HashPassword(user.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	newUser := modelsRepo.User{
 		ID:     uuid.New(),
 		Name:   user.UserName,
-		Hashed: user.Hashed,
+		Hashed: hash,
 	}
 	repo.users = append(repo.users, newUser)
-	return newUser, nil
+	return &newUser, nil
 
 }
 
-func (repo *userStoreInMemory) LoginUser(user models.UserRequest) (*modelsRepo.User, error) {
+func (repo *userStoreInMemory) LoginUser(user models.LoginUserRequest) (*modelsRepo.User, error) {
 	repo.s.Lock()
 	defer repo.s.Unlock()
 	for _, i := range repo.users {
