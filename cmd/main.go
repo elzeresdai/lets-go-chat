@@ -23,7 +23,7 @@ func main() {
 	handlers := handler.InitHandlers(di)
 	e := echo.New()
 	e.POST("/user", handlers.User.HandleUserCreate)
-	e.POST("user/login", handlers.User.HandleUserLogin, IPRateLimit())
+	e.POST("/user/login", handlers.User.HandleUserLogin, IPRateLimit())
 	e.Logger.Fatal(e.Start(":" + port))
 	return
 }
