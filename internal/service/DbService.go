@@ -2,23 +2,24 @@ package service
 
 import (
 	"github.com/dgrijalva/jwt-go"
-	uuid "github.com/google/uuid"
+	"github.com/google/uuid"
 	"lets-go-chat/internal/models"
 	"lets-go-chat/internal/repository"
 	"os"
 	"time"
 )
 
-type userServiceImpl struct {
-	userRepo repository.UserRepository
+type userServiceImplDB struct {
+	userRepoDB repository.UserRepoDB
 }
 
-func NewUserService(user repository.UserRepository) UserService {
-	return userServiceImpl{user}
+func NewUserServiceDB(user repository.UserRepoDB) UserService {
+	return userServiceImplDB{user}
 }
 
-func (us userServiceImpl) CreateUser(user models.CreateUserRequest) (*models.CreateUserResponse, error) {
-	newUser, err := us.userRepo.CreateUser(user)
+func (us userServiceImplDB) CreateUser(user models.CreateUserRequest) (*models.CreateUserResponse, error) {
+	newUser, err := us.userRepoDB.CreateUser(user)
+
 	if err != nil {
 		return nil, err
 	}
@@ -29,21 +30,18 @@ func (us userServiceImpl) CreateUser(user models.CreateUserRequest) (*models.Cre
 	return resp, nil
 }
 
-func (us userServiceImpl) LoginUser(user models.LoginUserRequest) (*models.LoginUserResponse, error) {
-	existUser, _ := us.userRepo.LoginUser(user)
-	if existUser == nil {
-		return nil, nil
-	}
-
+func (us userServiceImplDB) LoginUser(user models.LoginUserRequest) (*models.LoginUserResponse, error) {
+	existUser, _ := us.userRepoDB.LoginUser(user)
 	token, err := us.GenerateToken(existUser.ID)
 	if err != nil {
 		return nil, err
 	}
 	resp := models.LoginUserResponse{Url: token}
 	return &resp, nil
+
 }
 
-func (us userServiceImpl) GenerateToken(userId uuid.UUID) (string, error) {
+func (us userServiceImplDB) GenerateToken(userId uuid.UUID) (string, error) {
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["user_id"] = userId

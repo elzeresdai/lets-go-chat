@@ -46,5 +46,4 @@ func IsValidLoginRequest(user models.LoginUserRequest) bool {
 	}
 
 	return false
-
 }

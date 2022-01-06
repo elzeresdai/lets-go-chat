@@ -1,7 +1,8 @@
 package container
 
 import (
-	"lets-go-chat/internal/repository/inMemory"
+	postgresdb2 "lets-go-chat/internal/db"
+	"lets-go-chat/internal/repository/postgres"
 	"lets-go-chat/internal/service"
 )
 
@@ -13,14 +14,10 @@ type Services struct {
 	UserService service.UserService
 }
 
-// Inject represent the starter of our IoC Container, here we will inject
-// the necessary structs/functions that we need to build our project.
 func Inject() Container {
-	//stores
-	userRepo := inMemory.NewUserStoreInMemory()
-
-	//init services
-	us := service.NewUserService(userRepo)
+	db := postgresdb2.ConnectDB()
+	userRepo := postgres.NewUserRepo(db)
+	us := service.NewUserServiceDB(userRepo)
 
 	services := Services{
 		UserService: us,
