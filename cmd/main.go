@@ -1,12 +1,15 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
 	"github.com/ulule/limiter/v3"
 	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"lets-go-chat/internal/container"
 	handler "lets-go-chat/internal/handlers"
-	"log"
+	"lets-go-chat/internal/middlewares"
+	"lets-go-chat/pkg/logging"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,14 +17,25 @@ import (
 )
 
 func main() {
+	logger := logging.GetLogger()
+	logger.Info("Start app")
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8090"
 	}
 
 	di := container.Inject()
+
 	handlers := handler.InitHandlers(di)
 	e := echo.New()
+	e.Use(middlewares.LoggingMiddleware)
+	e.Use(middlewares.PanicRecovery)
+
 	e.POST("/user", handlers.User.HandleUserCreate)
 	e.POST("/user/login", handlers.User.HandleUserLogin, IPRateLimit())
 	e.Logger.Fatal(e.Start(":" + port))
